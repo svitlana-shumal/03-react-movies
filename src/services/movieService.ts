@@ -4,7 +4,7 @@ import axios from "axios";
 const BASE_URL = "https://api.themoviedb.org/3/";
 const TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
-const fetchMovies = async (query: string): Promise<Movie[]> => {
+export async function fetchMovies(query: string): Promise<Movie[]> {
   const response = await axios.get(`${BASE_URL}/search/movie`, {
     params: {
       query,
@@ -16,6 +16,4 @@ const fetchMovies = async (query: string): Promise<Movie[]> => {
     },
   });
   return response.data.results;
-};
-
-export default fetchMovies;
+}

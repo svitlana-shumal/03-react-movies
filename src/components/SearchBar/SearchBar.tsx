@@ -6,25 +6,33 @@ interface SearchBarProps {
   onSubmit: (query: string) => void;
 }
 
-export default function SearchBar() {
+export default function SearchBar({ onSubmit }: SearchBarProps) {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    console.log("Please enter your search ${query}.");
+    e.preventDefault();
+    const form = e.currentTarget;
+    const input = form.element.namedId("query") as HTMLInputElement;
+    const query = input.value.trim();
+
+    if (!query) {
+      toast.error("Please enter your search ${query}.");
+    }
+
+    onSubmit(query);
+    form.reset();
   };
+
   return (
     <header className={styles.header}>
-      {" "}
       <div className={styles.container}>
-        {" "}
         <a
           className={styles.link}
           href="https://www.themoviedb.org/"
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by TMDB{" "}
-        </a>{" "}
-        <form className={styles.form}>
-          {" "}
+          Powered by TMDB
+        </a>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <input
             className={styles.input}
             type="text"
@@ -32,11 +40,11 @@ export default function SearchBar() {
             autoComplete="off"
             placeholder="Search movies..."
             autoFocus
-          />{" "}
+          />
           <button className={styles.button} type="submit">
-            Search{" "}
-          </button>{" "}
-        </form>{" "}
+            Search
+          </button>
+        </form>
       </div>
     </header>
   );
