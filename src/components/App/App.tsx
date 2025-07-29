@@ -14,18 +14,19 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isMovieModalOpen, setIsMovieModalOpen] = useState(false);
-
   const openModal = () => setIsMovieModalOpen(true);
-
   const closeModal = () => setIsMovieModalOpen(false);
 
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
   const handleSelectMovie = (movie: Movie) => {
-    console.log("Selected movie:", movie);
+    setSelectedMovie(movie);
+    openModal();
   };
 
   const handleSubmit = async (query: string) => {
     setMovies([]);
-    setIsLoading(false);
+    setIsLoading(true);
     setHasError(false);
     try {
       const fetchedMovies = await fetchMovies(query);
@@ -48,7 +49,10 @@ export default function App() {
       {!isLoading && !hasError && movies.length > 0 && (
         <MovieGrid onSelect={handleSelectMovie} movies={movies} />
       )}
-      <MovieModal />
+      {isMovieModalOpen && selectedMovie && (
+        <MovieModal movie={selectedMovie} onClose={closeModal} />
+      )}
+
       <ul>
         {movies.map((movie) => (
           <li key={movie.id}>{movie.title}</li>
