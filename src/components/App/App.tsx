@@ -2,7 +2,7 @@ import { useState } from "react";
 import "../App/App.css";
 import { fetchMovies } from "../../services/movieService";
 import SearchBar from "../SearchBar/SearchBar";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import { Movie } from "../../types/movie";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
@@ -15,7 +15,10 @@ export default function App() {
   const [hasError, setHasError] = useState(false);
   const [isMovieModalOpen, setIsMovieModalOpen] = useState(false);
   const openModal = () => setIsMovieModalOpen(true);
-  const closeModal = () => setIsMovieModalOpen(false);
+  const closeModal = () => {
+    setIsMovieModalOpen(false);
+    setSelectedMovie(null);
+  };
 
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
@@ -43,6 +46,7 @@ export default function App() {
   };
   return (
     <>
+      <Toaster position="top-right" />
       <SearchBar onSubmit={handleSubmit} />
       {isLoading && <Loader />}
       {hasError && <ErrorMessage />}
@@ -52,12 +56,6 @@ export default function App() {
       {isMovieModalOpen && selectedMovie && (
         <MovieModal movie={selectedMovie} onClose={closeModal} />
       )}
-
-      <ul>
-        {movies.map((movie) => (
-          <li key={movie.id}>{movie.title}</li>
-        ))}
-      </ul>
     </>
   );
 }
